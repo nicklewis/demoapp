@@ -1,9 +1,73 @@
 <html>
   <head>
     <title>PuppetConf 2017 - Contributor Summit</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
   </head>
 
   <body>
-    I AM NOT A WEB DEVELOPER
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="#">All About Tasks</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#tasks">Tasks</a></li>
+              <li><a href="#plans">Plans</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container" id="tasks">
+      <h2>Tasks</h2>
+      <span>Tasks represent single units of automation work and can either be executed on their own or composed with other tasks to form plans.</span>
+      <pre><code class="shell">#!/bin/bash
+
+previous_version=$(readlink /var/www/html/demo | xargs basename | cut -d'-' -f2)
+
+if [ ! -d &quot;/var/www/demoapp-${PT_version?}&quot; ]; then
+  url=&quot;https://github.com/nicklewis/demoapp/archive/${PT_version?}.tar.gz&quot;
+  curl -L $url | tar xzf - -C /var/www
+fi
+
+ln -snf &quot;/var/www/demoapp-${PT_version?}&quot; /var/www/html/demo
+
+echo &quot;{\&quot;previous\&quot;: \&quot;${previous_version}\&quot;, \&quot;new\&quot;: \&quot;${PT_version?}\&quot;}&quot;</code></pre>
+    </div>
+
+    <div class="container" id="plans">
+      <h2>Plans</h2>
+      <span>Plans can be used to connect multiple related tasks into a single multi-stage workflow</span>
+      <pre><code class="puppet">plan puppetconf2017::upgrade_and_notify(
+  String $host,
+  String $version,
+  String $token,
+) {
+  $result = run_task(puppetconf2017::upgrader, $host, {'version' =&gt; $version})
+
+  $previous = $result.value($host)['previous']
+  $new = $result.value($host)['new']
+  $msg = &quot;Upgraded from version ${previous} to ${new}&quot;
+
+  run_task(hipchat, $host, {'from' =&gt; 'Demo app',
+                            'room' =&gt; 'Demo Room',
+                            'token' =&gt; $token,
+                            'api' =&gt; 'https://api.hipchat.com/v2',
+                            'msg' =&gt; $msg,})
+}</code></pre>
+    </div>
+
+    <script src="js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
   </body>
 </html>
