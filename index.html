@@ -29,6 +29,7 @@
     <div class="container" id="tasks">
       <h2>Tasks</h2>
       <span>Tasks represent single units of automation work and can either be executed on their own or composed with other tasks to form plans.</span>
+      <marquee direction="up">
       <pre><code class="shell">#!/bin/bash
 
 previous_version=$(readlink /var/www/html/demo | xargs basename | cut -d'-' -f2)
@@ -41,11 +42,13 @@ fi
 ln -snf &quot;/var/www/demoapp-${PT_version?}&quot; /var/www/html/demo
 
 echo &quot;{\&quot;previous\&quot;: \&quot;${previous_version}\&quot;, \&quot;new\&quot;: \&quot;${PT_version?}\&quot;}&quot;</code></pre>
+      </marquee>
     </div>
 
     <div class="container" id="plans">
       <h2>Plans</h2>
       <span>Plans can be used to connect multiple related tasks into a single multi-stage workflow</span>
+      <marquee direction="up">
       <pre><code class="puppet">plan puppetconf2017::upgrade_and_notify(
   String $host,
   String $version,
@@ -62,7 +65,7 @@ echo &quot;{\&quot;previous\&quot;: \&quot;${previous_version}\&quot;, \&quot;ne
                             'token' =&gt; $token,
                             'api' =&gt; 'https://api.hipchat.com/v2',
                             'msg' =&gt; $msg,})
-}</code></pre>
+}</code></pre></marquee>
     </div>
 
     <script src="js/bootstrap.min.js"></script>
